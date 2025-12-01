@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>3 en Raya</title>
+
+<style>
+    /*estilos*/
+    body{
+        text-align:center;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        background:#ef9dfa; 
+    }
+
+    h1{ color:#540b59; } 
+
+    #tablero{
+        width:300px;
+        height:300px;
+        margin:auto;
+        display:grid;
+        grid-template-columns: repeat(3,1fr);
+        gap:5px;
+    }
+    .casilla{
+        width:100px;
+        height:100px;
+        background:white;
+        border:2px solid #af0e94; 
+        font-size:50px;
+        font-weight:bold;
+        cursor:pointer;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        transition:0.2s;
+    }
+    .casilla:hover{
+        background:#c7ecff; 
+    }
+    #turno{
+        margin-top:10px;
+        font-size:22px;
+        font-weight:bold;
+        color:#80007c;
+    }
+    button{
+        margin-top:40px;
+        padding:8px 20px;
+        font-size:16px;
+        cursor:pointer;
+        color:#550553;
+        background-color: #d579c6;
+        
+    }
+</style>
+</head>
+
+<body>
+<h5>las tres S (SaShSa)</h5> 
+<h1>EL GATITO</h1>
+<h2 id="mensaje ganador"></h2>
+<p id="turno">Turno de: X</p>
+
+<div id="tablero">
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+    <div class="casilla"></div>
+</div>
+
+<button onclick="reiniciar()">Reiniciar</button>
+
+<script>
+let casillas = document.querySelectorAll(".casilla");
+let turno = "X"; 
+let juegoTerminado = false;
+
+/*dom*/
+casillas.forEach( celda =>{
+    celda.addEventListener("click", ()=>{
+        if(celda.innerText=="" && !juegoTerminado){
+            celda.innerText = turno;
+            verificarGanador();
+            turno = (turno=="X") ? "O" : "X";
+            document.getElementById("turno").innerText="Turno de: "+turno;
+        }
+    });
+});
+
+
+function verificarGanador(){
+    let c=[...casillas].map(i=>i.innerText);
+    let combos=[
+        [0,1,2], [3,4,5], [6,7,8], 
+        [0,3,6], [1,4,7], [2,5,8], 
+        [0,4,8], [2,4,6]           
+    ];
+    for(let combo of combos){
+        if(c[combo[0]]!="" && c[combo[0]]==c[combo[1]] && c[combo[1]]==c[combo[2]]){
+            juegoTerminado = true;
+            document.getElementById("turno").innerText="GANÓ: "+c[combo[0]];
+            document.getElementById("mensaje ganador").innerText="Ganadooor: "+c[combo[0]];
+
+            return;
+        }
+    }
+    if(!c.includes("")){
+        juegoTerminado = true;
+        document.getElementById("mensaje ganador").innerText="EMPATE, reinicia la jugada";
+    }
+}
+
+function reiniciar(){
+    casillas.forEach(celda => celda.innerText="");
+    turno="X";
+    juegoTerminado=false;
+    document.getElementById("turno").innerText="Turno de: X";
+    document.getElementById("mensaje ganador").innerText=" ";
+}
+</script>
+</body>
+</html>
